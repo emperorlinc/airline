@@ -1,0 +1,16 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<div class="">
+  <p>Name: {{ clients.user.name|title }}</p>
+  <p>Email address: {{ clients.user.email }}</p>
+  <p>Flight class: {{ clients.get_flight_type_display }}</p>
+
+  {% for flight in flights %}
+    <p>Flight: {{ flight }}.</p>
+    <p>Flight status: {{ flight.get_flight_status_display }}</p>
+  {% endfor %}
+</div>
+
+{% endblock content %}

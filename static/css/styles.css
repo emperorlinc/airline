@@ -1,0 +1,75 @@
+*{
+  padding: 0px;
+  margin: 0px;
+}
+.navbar{
+  width: 100%;
+  background: #f6f6f6;
+}
+.container{
+  display: flex;
+  justify-content: space-between;
+}
+.dashboard{
+  padding-left: 5px;
+  display: flex;
+  padding-bottom: 5px;
+}
+.dashboard a{
+  margin-left: 10px;
+}
+img{
+  width: 200px;
+}
+.logo{
+  margin-top: 15px;
+}
+.name{
+  color: #56fefe;
+  font-size: 75px;
+}
+hr{
+  color: grey;
+}
+a{
+  text-decoration: none;
+  cursor: pointer;
+}
+@keyframes disappear {
+  0%{
+    opacity: 1;
+    height: 25px;
+    padding-bottom: 7px;
+    font-weight: 300;
+    font-size: 20px;
+  }
+  90%{
+    opacity: 1;
+    height: 25px;
+    padding-bottom: 7px;
+    font-weight: 300;
+    font-size: 20px;
+  }
+  100%{
+    opacity: 0;
+    height: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-weight: 0;
+    font-size: 0px;
+  }
+}
+.message{
+  width: 100%;
+  height: 25px;
+  padding-bottom: 7px;
+  background: #9ACD32;
+  color: grey;
+  font-family: cursive, monospace, sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  animation-name: disappear;
+  animation-fill-mode: forwards;
+  animation-duration: 2s;
+  animation-play-state: running;
+}

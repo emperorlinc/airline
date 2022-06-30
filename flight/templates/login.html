@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<div class="">
+  <form method="post" autocomplete="off">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Email address">
+    <input type="password" name="password" placeholder="Password">
+    <input type="submit" value="Login">
+  </form>
+  <p>Don't have an account yet? <a href="{% url 'register' %}">Register</a></p>
+</div>
+
+{% endblock content %}

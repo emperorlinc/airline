@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<div class="">
+
+  <ul>
+    {% for flight in flights %}
+      <li><a href="{% url 'passenger' flight.id %}">{{ flight }}</a></li>
+    {% endfor %}
+  </ul>
+
+</div>
+
+{% endblock content %}
