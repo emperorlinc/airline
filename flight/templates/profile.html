@@ -1,0 +1,13 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<div>
+    <div id="profile-photo"><img src="{{ profile.photo.url }}"></div>
+    {{ profile.name }}
+    {{ profile.email }}
+    {{ profile.phone }}
+    <!-- TODO: Add other informations about the user to the page. -->
+</div>
+
+{% endblock content %}

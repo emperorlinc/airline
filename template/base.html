@@ -12,15 +12,17 @@
       <div class="container">
 
         <div class="logo">
-          <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="Airplane"></a>
+          <!-- TODO: Animate the logo. -->
+          <a href="{% url 'home' %}"><img src="{% static 'assets/img/logo.png' %}" alt="Airplane"></a>
         </div>
 
         <div class="name">
           <h2>Pytha Airways</h2>
         </div>
-
+        <!-- TODO: Add a profile link here for the user to view his/her own profile. -->
         <div class="logs">
           {% if request.user.is_authenticated %}
+            <a href="{% url 'profile' %}"><img id="profile-icon" src="{% static 'img/assets/my1.png' %}" alt="profile"></a>
             <a href="{% url 'logout' %}">Logout</a>
           {% else %}
             <a href="{% url 'login' %}">Login</a>
@@ -29,17 +31,28 @@
 
       </div>
 
-      {% if request.user.is_staff %}
-        <div class="dashboard">
+        <!-- TODO: Remove the dashboard div when the user is not authenticated. -->
+        {% if request.user.is_authenticated %}
+          <div class="dashboard">
 
-          <form autocomplete="off">
-            <input type="text" name="q" value="{{ q }}" placeholder="Search...">
-          </form>
+            {% if request.user.is_staff %}
 
-          <a href="{% url 'flight' %}">Flights</a>
-          <a href="{% url 'client' %}">Clients</a>
-        </div>
-      {% endif %}
+              <form autocomplete="off">
+                <input type="text" name="q" value="{{ q }}" placeholder="Search...">
+              </form>
+
+              <a href="{% url 'flight' %}">Flights.</a>
+              <a href="{% url 'client' %}">Clients.</a>
+              <a href="{% url 'add-airport' %}">Add airport.</a>
+              <a href="{% url 'create-flight' %}">Create a flight.</a>
+            {% else %}
+              <a href="{% url 'book-flight' %}">Book a flight.</a>
+
+            {% endif %}
+
+          </div>
+        {% endif %}
+
       <hr>
     </div>
   </body>

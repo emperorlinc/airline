@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<div>
+    <form method="post" autocomplete="off" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Book">
+        <a href="{{ request.META.HTTP_REFERER }}">Cancel</a>
+    </form>
+</div>
+
+{% endblock content %}

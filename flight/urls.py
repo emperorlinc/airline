@@ -12,4 +12,9 @@ urlpatterns = [
     path("client/", views.clients_view, name="client"),
     path("client/<str:pk>/", views.client_detail_view, name="client_detail"),
     path("passenger/<str:pk>/", views.passenger_view, name="passenger"),
+
+    path("booking/", views.create_flight_view, name="create-flight"),
+    path("add_airport/", views.add_airport, name="add-airport"),
+    path("book_flight/", views.booking_view, name="book-flight"),
+    path("profile/", views.profile_view, name="profile"),
 ]

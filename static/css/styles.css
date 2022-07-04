@@ -18,8 +18,22 @@
 .dashboard a{
   margin-left: 10px;
 }
-img{
+.logs{
+  display: flex;
+}
+.logo img{
   width: 200px;
+  animation: move 1s linear;
+}
+@keyframes move {
+  0%{
+    transform: translateX(-50vh);
+    opacity: 0;
+  }
+  100%{
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 .logo{
   margin-top: 15px;
@@ -27,6 +41,10 @@ img{
 .name{
   color: #56fefe;
   font-size: 75px;
+}
+#profile-icon{
+  width: 25px;
+  margin-right: 5px;
 }
 hr{
   color: grey;
@@ -72,4 +90,8 @@ a{
   animation-fill-mode: forwards;
   animation-duration: 2s;
   animation-play-state: running;
+}
+#profile-photo img{
+  width: 100px;
+  border-radius: 50%;
 }
