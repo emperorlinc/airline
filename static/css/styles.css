@@ -21,6 +21,28 @@
 .logs{
   display: flex;
 }
+#toggle{
+	width: 50px;
+	height: 20px;
+	background-color: black;
+	display: flex;
+	position: relative;
+	align-items: center;
+	justify-content: space-between;
+	border-radius: 20px;
+}
+#ball{
+	background-color: white;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	position: absolute;
+	border-radius: 50%;
+	transition: transform 0.5s linear;
+}
+#toggle i{
+  color: white;
+}
 .logo img{
   width: 200px;
   animation: move 1s linear;
@@ -39,7 +61,7 @@
   margin-top: 15px;
 }
 .name{
-  color: #56fefe;
+  color: #4628B4;
   font-size: 75px;
 }
 #profile-icon{
@@ -81,7 +103,7 @@ a{
   width: 100%;
   height: 25px;
   padding-bottom: 7px;
-  background: #9ACD32;
+  background: #4628B4;
   color: grey;
   font-family: cursive, monospace, sans-serif;
   font-weight: 300;

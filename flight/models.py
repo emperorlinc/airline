@@ -2,12 +2,17 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 # Create your models here.
+
+# ======================================================================================================
+# THE CUSTOM USER MODEL MANAGER.
+# ======================================================================================================
+
 class CustomUserManager(BaseUserManager):
-    def create_user(self, name, email, phone, password=None):
+    def create_user(self, name, email, phone, photo, password=None):
         if not email:
             raise ValueError("User must have an email.")
         email = self.normalize_email(email)
-        user = self.model(name=name, email=email, phone=phone)
+        user = self.model(name=name, email=email, phone=phone, photo=photo)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -26,12 +31,18 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+# ======================================================================================================
+# THE CUSTOM USER THAT ALLOWS TO ADD MORE FIELDS THAN THE DEFAULT.
+# ======================================================================================================
 
 class CustomUser(AbstractUser):
     username = None
     name = models.CharField(max_length=64)
+    photo = models.ImageField(upload_to="profile", default=None)
     email = models.EmailField(unique=True, max_length=64)
     phone = models.CharField(max_length=14)
+    password = models.CharField(max_length=16)
+    confirm_password = models.CharField(max_length=16)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -51,12 +62,16 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.get_first_name()
 
+# ======================================================================================================
+# THE PROFILE MODEL HANDLER FOR THE USER.
+# ======================================================================================================
+
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
     email = models.EmailField(max_length=64)
-    photo = models.ImageField(upload_to="profile", default="avatar.png", blank=True, null=True)
     phone = models.CharField(max_length=14)
+    photo = models.ImageField()
 
     def __str__(self):
         return self.name
@@ -68,6 +83,7 @@ class Profile(models.Model):
 
 class Airport(models.Model):
     """AIRPORT FIELDS THAT THE STAFFS WILL FILL TO MAKE THE DATAS AVAILABLE FOR THE USERS CONVINENCE"""
+    country = models.CharField(max_length=64)
     city = models.CharField(max_length=64)
     name = models.CharField(max_length=64)
     code = models.CharField(max_length=3)
@@ -86,8 +102,8 @@ class Flight(models.Model):
     """FLIGHT FIELDS THAT THE STAFFS WILL FILL TO MAKE THE DATAS AVAILABLE FOR THE USERS CONVINENCE"""
     origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="initial")
     destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="final")
-    duration = models.IntegerField()
-    flight_status = models.CharField(choices=FLIGHT_STATUS, max_length=1)
+    duration = models.IntegerField(blank=True, null=True)
+    flight_status = models.CharField(choices=FLIGHT_STATUS, max_length=1, blank=True, null=True)
 
     def __str__(self):
         return f"Flight { self.id }: From { self.origin } to { self.destination }"
@@ -105,10 +121,10 @@ FLIGHT_TYPE = (
 
 class Passenger(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="user")
-    origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="departure", blank=True, null=True)
-    destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrival", blank=True, null=True)
+    origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="departure")
+    destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrival")
     # flight = models.ManyToManyField(Flight, blank=True, related_name="passenger")
-    flight_class = models.CharField(choices=FLIGHT_TYPE, max_length=2, blank=True, null=True)
+    flight_class = models.CharField(choices=FLIGHT_TYPE, max_length=2)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

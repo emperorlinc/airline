@@ -2,6 +2,15 @@ from django import forms
 from .models import Airport, Flight, Passenger, Profile
 
 # Create your forms here.
+class CustomUserForm(forms.Form):
+    name = forms.CharField(max_length=64)
+    email = forms.EmailField(max_length=64)
+    phone = forms.CharField(max_length=14)
+    photo = forms.ImageField()
+    password = forms.CharField(min_length=8, max_length=16, widget=forms.PasswordInput)
+    confirm_password = forms.CharField(min_length=8, max_length=16, widget=forms.PasswordInput)
+    
+
 class AirportForm(forms.ModelForm):
     class Meta:
         model = Airport

@@ -1,7 +1,7 @@
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .models import Airport, CustomUser, Flight, Flight, Passenger, Profile
-from .forms import AirportForm, PassengerForm, FlightForm, FlightForm
+from .forms import AirportForm, CustomUserForm, PassengerForm, FlightForm, FlightForm
 from django.shortcuts import render, redirect
 from .decorators import restriction
 from django.contrib import messages
@@ -12,28 +12,58 @@ def home_view(request, *args, **kwargs):
 
 @restriction
 def register_view(request, *args, **kwargs):
+    form = CustomUserForm()
     if request.method == "POST":
-        name = request.POST["name"]
-        email = request.POST["email"]
-        phone = request.POST["phone"]
-        password = request.POST["password"]
-        confirm_password = request.POST["confirm_password"]
-        if password != confirm_password:
-            messages.error(request, "Password did not match...")
-            return redirect("register")
-        elif CustomUser.objects.filter(email=email).exists():
-            messages.info(request, "Email already taken...")
-            return redirect("register")
-        elif CustomUser.objects.filter(phone=phone).exists():
-            messages.info(request, "Phone number already taken...")
-            return redirect("register")
-        else:
-            user = CustomUser.objects.create_user(name=name, email=email, phone=phone, password=password)
-            user.save()
-            login(request, user)
-            messages.success(request, "Registration successful...")
-            return redirect("home")
-    return render(request, "register.html")
+
+        form = CustomUserForm(request.POST, request.FILES)
+
+        if form.is_valid():
+
+            name = form.cleaned_data.get("name")
+            email = form.cleaned_data.get("email")
+            phone = form.cleaned_data.get("phone")
+            photo = form.cleaned_data.get("phote")
+            password = form.cleaned_data.get("password")
+            confirm_password = form.cleaned_data.get("confirm_password")
+        
+            if password != confirm_password:
+                messages.error(request, "ERROR: Your password didn't match.")
+                return redirect("register")
+            if CustomUser.objects.filter(email=email).exists():
+                messages.error(request, "ERROR: Email already taken.")
+                return redirect("register")
+            elif CustomUser.objects.filter(phone=phone).exists():
+                messages.error(request, "ERROR: Phone number already used.")
+                return redirect("register")
+            else:
+                user = CustomUser.objects.create_user(name=name, email=email, phone=phone, password=password, photo=photo)
+                user.save()
+                login(request, user)
+                messages.success(request, "Registration successful...")
+                return redirect("home")
+    # if request.method == "POST":
+    #     name = request.POST["name"]
+    #     email = request.POST["email"]
+    #     phone = request.POST["phone"]
+    #     password = request.POST["password"]
+    #     confirm_password = request.POST["confirm_password"]
+    #     # photo = request.POST["photo"]
+    #     if password != confirm_password:
+    #         messages.error(request, "Password did not match...")
+    #         return redirect("register")
+    #     elif CustomUser.objects.filter(email=email).exists():
+    #         messages.info(request, "Email already taken...")
+    #         return redirect("register")
+    #     elif CustomUser.objects.filter(phone=phone).exists():
+    #         messages.info(request, "Phone number already taken...")
+    #         return redirect("register")
+    #     else:
+    #         user = CustomUser.objects.create_user(name=name, email=email, phone=phone, password=password)
+    #         user.save()
+    #         login(request, user)
+    #         messages.success(request, "Registration successful...")
+    #         return redirect("home")
+    return render(request, "register.html", { "form": form })
 
 @restriction
 def login_view(request, *args, **kwargs):
@@ -83,24 +113,31 @@ def client_detail_view(request, pk, *args, **kwargs):
 @login_required(login_url="login")
 def passenger_view(request, pk, *args, **kwargs):
     flight = Flight.objects.get(id=pk)
-    passengers = flight.passenger.all()
-    context = { "passengers": passengers }
+    passengers = Passenger.objects.filter(origin=flight.origin, destination=flight.destination)
+    context = { "passengers": passengers, "flight": flight }
     return render(request, "passenger.html", context)
 
 @login_required(login_url="login")
-def create_flight_view(request, *args, **kwargs):
-    form = FlightForm()
+def untracked_flight_view(request, *args, **kwargs):
+    flights = Flight.objects.filter(flight_status=None)
+    context = { "flights": flights }
+    return render(request, "untracked_flight.html", context)
+
+@login_required(login_url="login")
+def update_flight_view(request, pk, *args, **kwargs):
+    data = Flight.objects.get(id=pk)
+    form = FlightForm(instance=data)
     if request.method == "POST":
-        form = FlightForm(request.POST)
+        form = FlightForm(request.POST, instance=data)
         if form.is_valid():
             form.save()
-            messages.success(request, "Flight booked successfully...")
+            messages.success(request, "Flight track successfully...")
             return redirect("home")
         else:
-            messages.error(request, "Flight booking was not successful...")
-            return redirect("create-flight")
+            messages.error(request, "Flight track was not successful...")
+            return redirect("update-flight")
     context = { "form": form }
-    return render(request, "create_flight.html", context)
+    return render(request, "update_flight.html", context)
 
 @login_required(login_url="login")
 def add_airport(request, *args, **kwargs):
@@ -125,9 +162,10 @@ def booking_view(request, *args, **kwargs):
         if form.is_valid():
             user = form.save(commit=False)
             user.user = request.user
-            user.flight = user.flight.add(origin=origin, destination=destionation)
             user.save()
-            messages.success(request, "Flight Booked Successfully...")
+            flight = Flight.objects.create(origin=user.origin, destination=user.destination)
+            flight.save()
+            messages.success(request, "Flight Booked successfully...")
             return redirect("home")
         else:
             messages.error(request, "Invalid Form Entry...")

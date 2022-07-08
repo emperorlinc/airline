@@ -6,7 +6,9 @@
   <ul>
     {% for passenger in passengers %}
      <li><a href="{% url 'client_detail' passenger.id %}">{{ passenger }}</a></li>
+     <li>{{ passenger.get_flight_class_display }}</li>
     {% endfor %}
+    <li>{{ flight.get_flight_status_display }}</li>
   </ul>
 
 </div>

@@ -10,6 +10,7 @@ def create_profile(sender, created, instance, **kwargs):
         Profile.objects.create(
             user=user,
             name=user.name,
+            photo=user.photo,
             email=user.email,
             phone=user.phone
         )

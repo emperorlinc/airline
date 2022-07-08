@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<div>
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{{ request.META.HTTP_REFERER }}">Cancel</a>
+        <input type="submit" value="Update">
+    </form>
+</div>
+
+{% endblock content %}

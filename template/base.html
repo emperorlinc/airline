@@ -13,7 +13,7 @@
 
         <div class="logo">
           <!-- TODO: Animate the logo. -->
-          <a href="{% url 'home' %}"><img src="{% static 'assets/img/logo.png' %}" alt="Airplane"></a>
+          <a href="{% url 'home' %}"><img src="{% static 'assets/img/2098593.svg' %}" alt="Airplane"></a>
         </div>
 
         <div class="name">
@@ -21,6 +21,12 @@
         </div>
         <!-- TODO: Add a profile link here for the user to view his/her own profile. -->
         <div class="logs">
+          <div id="toggle">
+            <i>L</i>
+            <i>D</i>
+            <div id="ball"></div>
+          </div>
+
           {% if request.user.is_authenticated %}
             <a href="{% url 'profile' %}"><img id="profile-icon" src="{% static 'assets/img/my1.png' %}" alt="profile"></a>
             <a href="{% url 'logout' %}">Logout</a>
@@ -44,7 +50,7 @@
               <a href="{% url 'flight' %}">Flights.</a>
               <a href="{% url 'client' %}">Clients.</a>
               <a href="{% url 'add-airport' %}">Add airport.</a>
-              <a href="{% url 'create-flight' %}">Create a flight.</a>
+              <a href="{% url 'untracked' %}">Untracked flights.</a>
             {% else %}
               <a href="{% url 'book-flight' %}">Book a flight.</a>
 

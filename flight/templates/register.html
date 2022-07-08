@@ -3,13 +3,16 @@
 {% block content %}
 
   <div class="">
-    <form method="post" autocomplete="off">
+    <form method="post" autocomplete="off" enctype="multipart/form-data">
       {% csrf_token %}
-      <input type="text" name="name" placeholder="Full name">
+
+      {{ form.as_p }}
+      <!-- <input type="text" name="name" placeholder="Full name">
       <input type="email" name="email" placeholder="Email address">
       <input type="text" name="phone" placeholder="Phone number">
       <input type="password" name="password" placeholder="Password">
-      <input type="password" name="confirm_password" placeholder="Confirm password">
+      <input type="password" name="confirm_password" placeholder="Confirm password"> -->
+      <!-- <input type="file" name="photo" required> -->
       <input type="submit" value="Register">
     </form>
     <p>You already have an account? <a href="{% url 'login' %}">Login</a></p>

@@ -1,0 +1,11 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<div>
+    {% for flight in flights %}
+        <a href="{% url 'update-flight' flight.id %}">{{ flight }}</a>
+    {% endfor %}
+</div>
+
+{% endblock content %}
